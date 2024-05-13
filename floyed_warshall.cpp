@@ -60,12 +60,21 @@ int main()
             p.push_back(INT_MAX);
             
         }
+        p.push_back(INT_MAX);
         D.push_back(t);
         path.push_back(p);
        
         p.clear();
 
         t.clear();
+    }
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            cout<<path[i][j]<<" ";
+        }
+        cout<<endl;
     }
     for(int i=0;i<n;i++)
     {
@@ -86,7 +95,14 @@ int main()
         }
     }
  
-    
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            cout<<path[i][j]<<" ";
+        }
+        cout<<endl;
+    }
  
     
     floyed(a,D,path);
