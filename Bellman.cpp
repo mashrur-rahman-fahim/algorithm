@@ -51,7 +51,7 @@ int main()
     Bellman(adj,pth);
     if(detect_neg(adj,pth))
     cout << "yes"<<endl;
-    cout<<pth[4][0].first<<endl;
+    cout<<pth[3][0].first<<endl;
 }
 // input 
 // 5
