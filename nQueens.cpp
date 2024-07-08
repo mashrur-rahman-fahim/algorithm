@@ -18,8 +18,8 @@ void nQueens(vector<int>&sol,int k,int n)
             sol[k]=i;
             if(k==n)
             {
-                for(int i=1;i<=n;i++)
-                cout<<sol[i]<<" ";
+                for(int j=1;j<=n;j++)
+                cout<<sol[j]<<" ";
 
                 cout<<endl;
             }
