@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// FIFO Page Replacement
+int fifo(vector<int> pages, int frames) {
+    queue<int> q;
+    unordered_set<int> s;
+    int faults = 0;
+
+    for (int page : pages) {
+        if (s.find(page) == s.end()) { // Page fault
+            faults++;
+            if (s.size() == frames) { // Remove oldest
+                int old = q.front(); q.pop();
+                s.erase(old);
+            }
+            s.insert(page);
+            q.push(page);
+        }
+    }
+    return faults;
+}
+
+// Optimal Page Replacement
+int optimal(vector<int> pages, int frames) {
+    vector<int> memory;
+    int faults = 0;
+
+    for (int i = 0; i < pages.size(); i++) {
+        int page = pages[i];
+        // If page not in memory
+        if (find(memory.begin(), memory.end(), page) == memory.end()) {
+            faults++;
+            if (memory.size() < frames) {
+                memory.push_back(page);
+            } else {
+                // Find farthest page
+                int farthest = -1, idx = -1;
+                for (int j = 0; j < memory.size(); j++) {
+                    int nextUse = INT_MAX;
+                    for (int k = i + 1; k < pages.size(); k++) {
+                        if (memory[j] == pages[k]) {
+                            nextUse = k; break;
+                        }
+                    }
+                    if (nextUse > farthest) {
+                        farthest = nextUse;
+                        idx = j;
+                    }
+                }
+                memory[idx] = page;
+            }
+        }
+    }
+    return faults;
+}
+
+// LRU Page Replacement
+int lru(vector<int> pages, int frames) {
+    list<int> memory;
+    unordered_map<int, list<int>::iterator> pos;
+    int faults = 0;
+
+    for (int page : pages) {
+        if (pos.find(page) == pos.end()) { // Page fault
+            faults++;
+            if (memory.size() == frames) { // Remove least recently used
+                int old = memory.back();
+                memory.pop_back();
+                pos.erase(old);
+            }
+        } else { // Page hit, remove old position
+            memory.erase(pos[page]);
+        }
+        memory.push_front(page);
+        pos[page] = memory.begin();
+    }
+    return faults;
+}
+
+int main() {
+    // Input Example
+    int frames = 3;
+    vector<int> pages = {7,0,1,2,0,3,0,4,2,3,0,3,0,3,2,1,2,0,1,7,0,1};
+    int n = pages.size();
+
+    int f = fifo(pages, frames);
+    int o = optimal(pages, frames);
+    int l = lru(pages, frames);
+
+    cout << "Number of Page References: " << n << "\n";
+    cout << "Number of Memory Frames: " << frames << "\n\n";
+
+    cout << "FIFO Page Faults: " << f << "  | Page Fault Rate: " << (f*100/n) << "%\n";
+    cout << "Optimal Page Faults: " << o << " | Page Fault Rate: " << (o*100/n) << "%\n";
+    cout << "LRU Page Faults: " << l << "     | Page Fault Rate: " << (l*100/n) << "%\n";
+
+    return 0;
+}
