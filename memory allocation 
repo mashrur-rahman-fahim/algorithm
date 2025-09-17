@@ -1,0 +1,113 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to implement First Fit
+void firstFit(vector<int> blocks, vector<int> requests) {
+    cout << "\n--- First Fit Allocation ---\n";
+    int n = blocks.size(), m = requests.size();
+    vector<int> allocation(m, -1);
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (blocks[j] >= requests[i]) {
+                allocation[i] = j;      // allocate block j to request i
+                blocks[j] -= requests[i]; // reduce the block size
+                break;
+            }
+        }
+    }
+
+    // Print allocation result
+    int externalFrag = 0;
+    for (int i = 0; i < n; i++) externalFrag += blocks[i];
+
+    for (int i = 0; i < m; i++) {
+        if (allocation[i] != -1)
+            cout << "Request " << requests[i] << " -> Block " << allocation[i] + 1 << "\n";
+        else
+            cout << "Request " << requests[i] << " -> Not Allocated\n";
+    }
+
+    cout << "External Fragmentation = " << externalFrag << "\n";
+}
+
+// Function to implement Best Fit
+void bestFit(vector<int> blocks, vector<int> requests) {
+    cout << "\n--- Best Fit Allocation ---\n";
+    int n = blocks.size(), m = requests.size();
+    vector<int> allocation(m, -1);
+
+    for (int i = 0; i < m; i++) {
+        int bestIdx = -1;
+        for (int j = 0; j < n; j++) {
+            if (blocks[j] >= requests[i]) {
+                if (bestIdx == -1 || blocks[j] < blocks[bestIdx])
+                    bestIdx = j;
+            }
+        }
+        if (bestIdx != -1) {
+            allocation[i] = bestIdx;
+            blocks[bestIdx] -= requests[i];
+        }
+    }
+
+    // Print allocation result
+    int externalFrag = 0;
+    for (int i = 0; i < n; i++) externalFrag += blocks[i];
+
+    for (int i = 0; i < m; i++) {
+        if (allocation[i] != -1)
+            cout << "Request " << requests[i] << " -> Block " << allocation[i] + 1 << "\n";
+        else
+            cout << "Request " << requests[i] << " -> Not Allocated\n";
+    }
+
+    cout << "External Fragmentation = " << externalFrag << "\n";
+}
+
+// Function to implement Worst Fit
+void worstFit(vector<int> blocks, vector<int> requests) {
+    cout << "\n--- Worst Fit Allocation ---\n";
+    int n = blocks.size(), m = requests.size();
+    vector<int> allocation(m, -1);
+
+    for (int i = 0; i < m; i++) {
+        int worstIdx = -1;
+        for (int j = 0; j < n; j++) {
+            if (blocks[j] >= requests[i]) {
+                if (worstIdx == -1 || blocks[j] > blocks[worstIdx])
+                    worstIdx = j;
+            }
+        }
+        if (worstIdx != -1) {
+            allocation[i] = worstIdx;
+            blocks[worstIdx] -= requests[i];
+        }
+    }
+
+    // Print allocation result
+    int externalFrag = 0;
+    for (int i = 0; i < n; i++) externalFrag += blocks[i];
+
+    for (int i = 0; i < m; i++) {
+        if (allocation[i] != -1)
+            cout << "Request " << requests[i] << " -> Block " << allocation[i] + 1 << "\n";
+        else
+            cout << "Request " << requests[i] << " -> Not Allocated\n";
+    }
+
+    cout << "External Fragmentation = " << externalFrag << "\n";
+}
+
+// Main function
+int main() {
+    // Example input
+    vector<int> blocks = {50, 200, 70, 115, 15};
+    vector<int> requests = {100, 10, 35, 15, 23, 6, 25, 55, 88, 40};
+
+    firstFit(blocks, requests);
+    bestFit(blocks, requests);
+    worstFit(blocks, requests);
+
+    return 0;
+}
